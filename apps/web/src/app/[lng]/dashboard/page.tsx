@@ -44,6 +44,8 @@ import { formatToPreference, normalizeLNDomain, useConfig, useWalletContext } fr
 import Link from 'next/link';
 import { appTheme } from '@/config';
 
+import Subnavbar from '@/components/Layout/Subnavbar';
+
 export default function Page() {
   const config = useConfig();
   const { t, lng } = useTranslation();
@@ -199,11 +201,7 @@ export default function Page() {
         <Divider y={64} />
       </Container>
 
-      <ButtonCTA>
-        <Button color="secondary" onClick={() => router.push('/scan')}>
-          <QrCodeIcon />
-        </Button>
-      </ButtonCTA>
+      <Subnavbar path="home" />
     </>
   );
 }
