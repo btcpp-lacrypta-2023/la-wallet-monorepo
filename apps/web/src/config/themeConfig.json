@@ -21,6 +21,6 @@
         "text": "#1C1C1C"
     },
     "borders": {
-        "buttonRadius": "50px"
+        "buttonRadius": "10px"
     }
 }

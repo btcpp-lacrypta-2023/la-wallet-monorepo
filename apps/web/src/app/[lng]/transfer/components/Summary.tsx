@@ -7,9 +7,9 @@ import { Button, Container, Divider, Feedback, Flex, Heading, Icon, LinkButton, 
 import { useTranslation } from '@/context/TranslateContext';
 import { formatToPreference, useWalletContext } from '@lawallet/react';
 import { TransferTypes } from '@lawallet/react/types';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import CardWithData from './CardWithData';
-import { useRouter } from 'next/navigation';
 
 type SummaryProps = {
   isLoading: boolean;

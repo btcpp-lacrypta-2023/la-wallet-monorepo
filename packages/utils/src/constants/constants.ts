@@ -22,7 +22,7 @@ export const baseConfig: ConfigProps = {
 };
 
 export const LanguagesList: AvailableLanguages[] = ['es', 'en'];
-export const defaultLocale: AvailableLanguages = 'es';
+export const defaultLocale: AvailableLanguages = 'en';
 
 export const CurrenciesMetadata: Record<AvailableCurrencies, CurrencyMetadata> = {
   ARS: {

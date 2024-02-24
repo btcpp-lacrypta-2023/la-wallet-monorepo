@@ -1,13 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { HomeIcon, RocketIcon } from '@bitcoin-design/bitcoin-icons-react/filled';
+import { useRouter } from 'next/navigation';
 
-import { Container, Button, QrCodeIcon, Icon } from '@lawallet/ui';
+import { Button, Container, Icon, QrCodeIcon } from '@lawallet/ui';
 
-import { SubnavbarPrimitive } from './style';
-import { ReactNode } from 'react';
 import { useTranslation } from '@/context/TranslateContext';
+import { ReactNode } from 'react';
+import { SubnavbarPrimitive } from './style';
 
 import ButtonCTA from '@/components/ButtonCTA';
 
@@ -20,22 +20,20 @@ interface ComponentProps {
 }
 
 export default function Subnavbar(props: ComponentProps) {
-  const { children, showBackPage = false, title, overrideBack = '', path = 'home' } = props;
+  const { path = 'home' } = props;
 
   const router = useRouter();
   const { t } = useTranslation();
-
-  const onlyChildren = !children;
 
   return (
     <SubnavbarPrimitive>
       <Container>
         <div className="info">
-          <button onClick={() => router.push('/')} className={`${path === 'home' && 'active'}`}>
+          <button onClick={() => router.push('/dashboard')} className={`${path === 'home' && 'active'}`}>
             <Icon>
               <HomeIcon />
             </Icon>
-            Home
+            {t('HOME')}
           </button>
           <ButtonCTA>
             <Button color="secondary" onClick={() => router.push('/scan')}>

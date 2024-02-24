@@ -1,110 +1,118 @@
 'use client';
 
-import { useState } from 'react';
-import { useTheme } from 'styled-components';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Navbar from '@/components/Layout/Navbar';
-import { Container, Divider, Flex, Text, Button, Icon, Heading, LinkButton, Card, ToggleSwitch } from '@lawallet/ui';
-import { SatoshiV2Icon } from '@bitcoin-design/bitcoin-icons-react/filled';
-import router from 'next/router';
-import { useWalletContext } from '@lawallet/react';
+import { Button, Container, Divider, Feedback, Flex, Input, InputGroup, InputGroupRight } from '@lawallet/ui';
+
 import { useTranslation } from '@/context/TranslateContext';
+import { useActionOnKeypress } from '@/hooks/useActionOnKeypress';
+import useErrors from '@/hooks/useErrors';
+import { detectTransferType, formatLNURLData } from '@lawallet/react';
+import { TransferTypes } from '@lawallet/react/types';
+import { useState } from 'react';
 
 export default function Page() {
-  const theme = useTheme();
   const { t } = useTranslation();
 
-  const [commissionAccepted, setCommissionAccepted] = useState(false);
+  const params = useSearchParams();
 
-  const {
-    settings: {
-      props: { currency },
-    },
-  } = useWalletContext();
+  const [inputText, setInputText] = useState<string>(params.get('data') ?? '');
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSwitch = () => {
-    setCommissionAccepted(!commissionAccepted);
+  const errors = useErrors();
+  const router = useRouter();
+  0;
+
+  const initializeTransfer = async (data: string) => {
+    if (loading) return;
+    setLoading(true);
+
+    const cleanData: string = data.trim();
+    const type: TransferTypes = detectTransferType(cleanData);
+
+    switch (type) {
+      case TransferTypes.NONE:
+        errors.modifyError('INVALID_RECIPIENT');
+        setLoading(false);
+        return;
+
+      case TransferTypes.INVOICE:
+        router.push(`/transfer/invoice/${cleanData}`);
+        return;
+    }
+
+    const formattedLNURLData = await formatLNURLData(cleanData);
+    if (formattedLNURLData.type === TransferTypes.NONE || formattedLNURLData.type === TransferTypes.INVOICE) {
+      errors.modifyError('INVALID_RECIPIENT');
+      setLoading(false);
+      return;
+    }
+
+    router.push(`/transfer/lnurl?data=${cleanData}`);
+    return;
+  };
+
+  const handleContinue = async () => {
+    if (!inputText.length) return errors.modifyError('EMPTY_RECIPIENT');
+    initializeTransfer(inputText);
+  };
+
+  useActionOnKeypress('Enter', handleContinue, [inputText]);
+
+  const handlePasteInput = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      setInputText(text);
+    } catch (error) {
+      console.log('error', error);
+    }
   };
 
   return (
     <>
-      <Navbar title={'Validate info'} showBackPage={true} />
+      <Navbar showBackPage={true} title={t('EXTRACT') + ' BTC'} overrideBack="/dashboard" />
 
       <Container size="small">
-        {/* <CardWithData type={type} data={data} /> */}
         <Divider y={16} />
-        <Flex direction="column" flex={1} justify="center" align="center" gap={8}>
-          <Heading as="h6">A extraer</Heading>
+        <Flex flex={1} direction="column">
+          <InputGroup>
+            <Input
+              onChange={(e) => {
+                errors.resetError();
+                setInputText(e.target.value);
+              }}
+              placeholder={'Bitcoin mainnet address'}
+              type="text"
+              value={inputText}
+              status={errors.errorInfo.visible ? 'error' : undefined}
+              disabled={loading}
+            />
+            <InputGroupRight>
+              <Button size="small" variant="borderless" onClick={handlePasteInput} disabled={!!inputText}>
+                {t('PASTE')}
+              </Button>
+            </InputGroupRight>
+          </InputGroup>
 
-          {/* {Number(convertedAmount) !== 0 ? ( */}
-          <Flex align="center" justify="center" gap={4}>
-            {currency === 'SAT' ? (
-              <Icon size="small">
-                <SatoshiV2Icon />
-              </Icon>
-            ) : (
-              <Text>$</Text>
-            )}
-            <Heading>{'convertedAmount'}</Heading>
-            <Text>{currency}</Text>
-          </Flex>
-          {/* ) : (
-            <Flex align="center" justify="center" gap={4}>
-              <Icon size="small">
-                <SatoshiV2Icon />
-              </Icon>
-              <Heading>{'amount'}</Heading>
-              <Text>SAT</Text>
-            </Flex>
-          )} */}
-        </Flex>
-        <Divider y={16} />
-        <Card>
-          <Flex direction="column" gap={8}>
-            <Text size="small" color={theme.colors.gray50}>
-              Debido a la comision de la red, sumado a la comision de 0.1% que cobra Boltz, el total final es de...
-            </Text>
-            <Flex justify="space-between" align="center">
-              <div>
-                <Flex align="end" gap={4}>
-                  <Text>Total</Text>
-                  <Text isBold>$4.50 {currency}</Text>
-                  {/* <Text size="small" color={theme.colors.gray50}>
-                    {currency}
-                  </Text> */}
-                </Flex>
-              </div>
-              <ToggleSwitch switchEnabled={commissionAccepted} onChange={handleSwitch} />
-            </Flex>
-          </Flex>
-        </Card>
-        <Divider y={16} />
-      </Container>
-
-      {/* {expired || (type !== TransferTypes.LNURLW && !balance.loading && insufficientBalance) ? (
-        <Flex flex={1} align="center" justify="center">
-          <Feedback show={true} status={'error'}>
-            {expired ? t('INVOICE_EXPIRED') : t('INSUFFICIENT_BALANCE')}
+          <Feedback show={errors.errorInfo.visible} status={'error'}>
+            {errors.errorInfo.text}
           </Feedback>
+
+          <Divider y={16} />
         </Flex>
-      ) : null} */}
+      </Container>
 
       <Flex>
         <Container size="small">
           <Divider y={16} />
           <Flex gap={8}>
-            <LinkButton variant="bezeledGray" onClick={() => router.push('/dashboard')}>
+            <Button variant="bezeledGray" onClick={() => router.push('/dashboard')}>
               {t('CANCEL')}
-            </LinkButton>
+            </Button>
 
-            <Button
-              color="secondary"
-              disabled={!commissionAccepted}
-              // onClick={onClick}
-              // disabled={!type || isLoading || expired || (type !== TransferTypes.LNURLW && insufficientBalance)}
-              // loading={isLoading}
-            >
-              {'Confirmar'}
+            <Button onClick={handleContinue} disabled={loading || inputText.length === 0} loading={loading}>
+              {t('CONTINUE')}
             </Button>
           </Flex>
           <Divider y={32} />

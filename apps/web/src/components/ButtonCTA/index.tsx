@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 
 import { Default } from './style';
-import { Divider } from '@lawallet/ui';
 
 interface ButtonCTAProps {
   children: ReactNode;

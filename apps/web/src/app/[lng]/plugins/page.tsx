@@ -1,7 +1,7 @@
 'use client';
 
-import { Container, Divider, Flex, Heading, Text, Card, ArrowRightIcon, Icon, Button } from '@lawallet/ui';
 import Subnavbar from '@/components/Layout/Subnavbar';
+import { ArrowRightIcon, Button, Card, Container, Divider, Flex, Heading, Icon, Text } from '@lawallet/ui';
 import { useRouter } from 'next/navigation';
 
 export default function Page() {
@@ -13,14 +13,12 @@ export default function Page() {
       <Container size="small">
         <Divider y={24} />
         <Heading>Plugins</Heading>
-        <Text>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora, voluptates.</Text>
-
         <Divider y={24} />
         <Card>
           <Flex gap={16} justify="space-between" align="center">
             <div>
               <Text isBold>Boltz exchange</Text>
-              <Text>Lorem ipsum dolor sit amet consectetur.</Text>
+              <Text>Submarine swap between Bitcoin Mainnet and lightning Network</Text>
             </div>
             <div>
               <Button onClick={() => router.push('/plugins/boltz')} variant="borderless">

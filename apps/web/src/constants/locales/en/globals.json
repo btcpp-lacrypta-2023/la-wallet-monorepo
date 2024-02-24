@@ -171,5 +171,11 @@
   "LIMIT_CARD_PER_DAY": "Your card will have a limit of {{ sats }} SAT per day",
   "NO_LIMIT_SET": "Your card will not have any limits on payments",
   "TIME_LEFT": "Time left",
-  "DONATION_CARD_SUCCESS": "Your card was transferred successfully"
+  "DONATION_CARD_SUCCESS": "Your card was transferred successfully",
+  "HOME": "Home",
+  "EXTRACT": "Extract",
+  "NOT_CONNECTED_WALLET": "You are not connected",
+  "CONNECT_WALLET_NEEDED": "You need to connect a wallet to be able to interact with this module",
+  "SHOULD_TRANSFER": "You should transfer"
+
 }
