@@ -12,9 +12,7 @@ export default function ButtonCTA(props: ButtonCTAProps) {
 
   return (
     <Default>
-      <Divider y={12} />
       <div>{children}</div>
-      <Divider y={24} />
     </Default>
   );
 }
