@@ -117,7 +117,7 @@ export default function Page() {
             <Divider y={16} />
             <Divider y={16} />
             <Flex flex={1} direction="column" align="center">
-              <Text>You haven't made any swaps</Text>
+              <Text>You havent made any swaps</Text>
             </Flex>
           </Container>
 

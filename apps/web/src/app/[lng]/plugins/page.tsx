@@ -17,7 +17,7 @@ export default function Page() {
         <Card>
           <Flex gap={16} justify="space-between" align="center">
             <div>
-              <Text isBold>Boltz exchange</Text>
+              <Text isBold>Boltz exchange (BETA - Not working)</Text>
               <Text>Submarine swap between Bitcoin Mainnet and lightning Network</Text>
             </div>
             <div>
